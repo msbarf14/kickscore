@@ -8,6 +8,7 @@
     "dev:server": "node server/index.js",
     "dev:all": "concurrently \"npm run dev:server\" \"npm run dev\"",
     "build": "vite build",
+    "start": "node server/index.js",
     "lint": "oxlint",
     "preview": "vite preview",
     "sync": "curl -X POST http://localhost:3001/api/sync/matches",

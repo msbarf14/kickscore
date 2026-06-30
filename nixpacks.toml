@@ -1,0 +1,12 @@
+[phases.setup]
+nixPkgs = ["...", "nodejs", "gcc", "gnumake", "python3"]
+
+[phases.install]
+dependsOn = ["setup"]
+
+[phases.build]
+dependsOn = ["install"]
+cmds = ["npm run build"]
+
+[start]
+cmd = "node server/index.js"
