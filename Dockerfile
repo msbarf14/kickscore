@@ -1,9 +1,9 @@
-FROM node:20-bookworm AS builder
+FROM node:20 AS builder
 
 WORKDIR /app
 
 COPY package*.json ./
-RUN npm ci --prefer-offline --no-audit --no-fund
+RUN npm ci --no-audit --no-fund
 
 COPY . .
 
