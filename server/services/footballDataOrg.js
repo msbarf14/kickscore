@@ -174,17 +174,18 @@ export function transformMatch(match) {
     stage = match.group.replace('_', ' ');
   }
 
+  const TZ = process.env.TIMEZONE || 'Asia/Jakarta';
   const matchDate = new Date(match.utcDate);
   const dateStr = matchDate.toLocaleDateString('id-ID', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
-    timeZone: 'Asia/Jakarta'
+    timeZone: TZ
   });
   const timeStr = matchDate.toLocaleTimeString('id-ID', {
     hour: '2-digit',
     minute: '2-digit',
-    timeZone: 'Asia/Jakarta',
+    timeZone: TZ,
     hour12: false
   });
 
@@ -209,7 +210,7 @@ export function transformMatch(match) {
     match_date: dateStr,
     match_time: timeStr,
     match_utc: match.utcDate,
-    timezone: 'Asia/Jakarta',
+    timezone: TZ,
     home_team_id: home.id,
     home_team_name: home.name,
     home_team_code: homeCode,

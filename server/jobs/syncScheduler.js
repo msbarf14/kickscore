@@ -5,6 +5,7 @@ let syncTask = null;
 
 const PORT = process.env.PORT || 3001;
 const SYNC_INTERVAL = process.env.SYNC_INTERVAL_MINUTES || 30;
+const TZ = process.env.TIMEZONE || 'Asia/Jakarta';
 
 async function triggerSync() {
   try {
@@ -48,7 +49,7 @@ export function startSyncScheduler() {
 
   syncTask = cron.schedule(cronPattern, triggerSync, {
     scheduled: true,
-    timezone: 'Asia/Jakarta'
+    timezone: TZ
   });
 
   console.log(`[Scheduler] Auto-sync enabled: every ${SYNC_INTERVAL} minutes`);

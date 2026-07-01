@@ -123,17 +123,18 @@ export function transformFixtureToMatch(fixture) {
   const home = teams.home || {};
   const away = teams.away || {};
 
+  const TZ = process.env.TIMEZONE || 'Asia/Jakarta';
   const matchDate = new Date(f.date);
   const dateStr = matchDate.toLocaleDateString('id-ID', {
     day: '2-digit',
     month: '2-digit',
     year: 'numeric',
-    timeZone: 'Asia/Jakarta'
+    timeZone: TZ
   });
   const timeStr = matchDate.toLocaleTimeString('id-ID', {
     hour: '2-digit',
     minute: '2-digit',
-    timeZone: 'Asia/Jakarta',
+    timeZone: TZ,
     hour12: false
   });
 
@@ -181,7 +182,7 @@ export function transformFixtureToMatch(fixture) {
     round: league.round,
     match_date: dateStr,
     match_time: timeStr,
-    timezone: f.timezone,
+    timezone: TZ,
     home_team_id: home.id,
     home_team_name: home.name,
     home_team_code: homeCode,
