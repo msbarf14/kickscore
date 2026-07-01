@@ -2,8 +2,9 @@ import { useState, useEffect, useCallback, useMemo } from 'react';
 import MatchCard from './components/MatchCard';
 import MatchTable from './components/MatchTable';
 import MatchDetailModal from './components/MatchDetailModal';
+import StandingsTable from './components/StandingsTable';
 import TrophyLogo from './components/TrophyLogo';
-import { FilterIcon, SyncIcon, LoadingIcon, PlayIcon, CalendarIcon, CheckIcon, ClockIcon, FireIcon } from './components/Icons';
+import { FilterIcon, SyncIcon, LoadingIcon, PlayIcon, CalendarIcon, CheckIcon, ClockIcon, FireIcon, ChartIcon } from './components/Icons';
 import { useMatches, useSync, useStatus } from './hooks/useMatches';
 import matches from './data/matches';
 
@@ -22,6 +23,7 @@ function App() {
   const [useApi, setUseApi] = useState(false);
   const [syncMessage, setSyncMessage] = useState('');
   const [stageFilter, setStageFilter] = useState('all');
+  const [activeTab, setActiveTab] = useState('matches');
 
   const { matches: apiMatches, loading, error, refetch } = useMatches();
   const { syncing, syncMatches } = useSync();
@@ -107,6 +109,34 @@ function App() {
         </div>
       </div>
 
+      {/* Tab Navigation */}
+      <div className="max-w-5xl mx-auto mb-4">
+        <div className="flex gap-[2px]">
+          <button
+            onClick={() => setActiveTab('matches')}
+            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold border transition-all duration-200 ${
+              activeTab === 'matches'
+                ? 'bg-[#1a1a1a] border-[#0f0] text-[#0f0]'
+                : 'bg-[#0a0a0a] border-[#222] text-[#666] hover:bg-[#111] hover:text-[#ccc]'
+            }`}
+          >
+            <PlayIcon size={12} />
+            PERTANDINGAN
+          </button>
+          <button
+            onClick={() => setActiveTab('standings')}
+            className={`flex items-center gap-1.5 px-4 py-2 text-xs font-bold border transition-all duration-200 ${
+              activeTab === 'standings'
+                ? 'bg-[#1a1a1a] border-[#0f0] text-[#0f0]'
+                : 'bg-[#0a0a0a] border-[#222] text-[#666] hover:bg-[#111] hover:text-[#ccc]'
+            }`}
+          >
+            <ChartIcon size={12} />
+            KLASEMEN
+          </button>
+        </div>
+      </div>
+
       {/* Stats & Controls */}
       <div className="max-w-5xl mx-auto mb-6 space-y-[2px]">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-[2px]">
@@ -161,80 +191,96 @@ function App() {
         )}
       </div>
 
-      {/* Live Matches - Grid */}
-      {liveMatches.length > 0 && (
-        <div className="max-w-5xl mx-auto mb-6">
-          <div className="flex items-center gap-2 mb-2">
-            <PlayIcon size={16} className="text-[#f00]" />
-            <span className="text-[#f00] text-xs font-bold uppercase tracking-wider">Sedang Berlangsung</span>
-          </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[2px]">
-            {liveMatches.map((match) => (
-              <MatchCard
-                key={match.id || match.fixture_id}
-                match={match}
-                onClick={handleMatchClick}
-              />
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Content */}
+      {activeTab === 'matches' ? (
+        <>
+          {/* Live Matches - Grid */}
+          {liveMatches.length > 0 && (
+            <div className="max-w-5xl mx-auto mb-6">
+              <div className="flex items-center gap-2 mb-2">
+                <PlayIcon size={16} className="text-[#f00]" />
+                <span className="text-[#f00] text-xs font-bold uppercase tracking-wider">Sedang Berlangsung</span>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-[2px]">
+                {liveMatches.map((match) => (
+                  <MatchCard
+                    key={match.id || match.fixture_id}
+                    match={match}
+                    onClick={handleMatchClick}
+                  />
+                ))}
+              </div>
+            </div>
+          )}
 
-      {/* Stage Filter + Table */}
-      {tableMatches.length > 0 && (
-        <div className="max-w-5xl mx-auto">
-          {/* Stage Filter */}
-          <div className="mb-2">
-            <div className="flex flex-wrap gap-[2px]">
-              {STAGE_GROUPS.map(sg => (
-                <button
-                  key={sg.key}
-                  onClick={() => setStageFilter(sg.key)}
-                  className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold border transition-all duration-200 ${
-                    stageFilter === sg.key
-                      ? 'bg-[#1a1a1a] border-[#0f0] text-[#0f0]'
-                      : 'bg-[#0a0a0a] border-[#222] text-[#666] hover:bg-[#111] hover:text-[#ccc]'
-                  }`}
-                >
-                  <FilterIcon size={12} />
-                  {sg.label} ({stageCounts[sg.key] || 0})
-                </button>
-              ))}
+          {/* Stage Filter + Table */}
+          {tableMatches.length > 0 && (
+            <div className="max-w-5xl mx-auto">
+              {/* Stage Filter */}
+              <div className="mb-2">
+                <div className="flex flex-wrap gap-[2px]">
+                  {STAGE_GROUPS.map(sg => (
+                    <button
+                      key={sg.key}
+                      onClick={() => setStageFilter(sg.key)}
+                      className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold border transition-all duration-200 ${
+                        stageFilter === sg.key
+                          ? 'bg-[#1a1a1a] border-[#0f0] text-[#0f0]'
+                          : 'bg-[#0a0a0a] border-[#222] text-[#666] hover:bg-[#111] hover:text-[#ccc]'
+                      }`}
+                    >
+                      <FilterIcon size={12} />
+                      {sg.label} ({stageCounts[sg.key] || 0})
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Table */}
+              <MatchTable matches={tableMatches} onMatchClick={handleMatchClick} />
+            </div>
+          )}
+
+          {/* Empty State */}
+          {liveMatches.length === 0 && tableMatches.length === 0 && (
+            <div className="max-w-5xl mx-auto text-center py-12">
+              <p className="text-[#444] text-sm">Tidak ada pertandingan</p>
+            </div>
+          )}
+
+          {/* Legend */}
+          <div className="max-w-5xl mx-auto mt-6">
+            <div className="border border-[#222] bg-[#0a0a0a] px-4 py-2 flex flex-wrap gap-6 text-xs">
+              <div className="flex items-center gap-2">
+                <PlayIcon size={14} className="text-[#f00] animate-pulse" />
+                <span className="text-[#444]">Live</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <ClockIcon size={14} className="text-[#ff0]" />
+                <span className="text-[#444]">Akan Berlangsung</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <CheckIcon size={14} className="text-[#0f0]" />
+                <span className="text-[#444]">Selesai</span>
+              </div>
+              <div className="flex items-center gap-2 ml-auto">
+                <span className="text-[#333] text-xs">Click row or ▶ for details</span>
+              </div>
             </div>
           </div>
-
-          {/* Table */}
-          <MatchTable matches={tableMatches} onMatchClick={handleMatchClick} />
+        </>
+      ) : (
+        /* Standings */
+        <div className="max-w-5xl mx-auto">
+          <div className="border border-[#222] bg-[#0a0a0a]">
+            <div className="px-4 py-2 border-b border-[#222] flex items-center gap-2">
+              <ChartIcon size={14} className="text-[#0f0]" />
+              <span className="text-[#ccc] text-xs font-bold uppercase tracking-wider">Klasemen Tim</span>
+            </div>
+            <StandingsTable />
+          </div>
         </div>
       )}
-
-      {/* Empty State */}
-      {liveMatches.length === 0 && tableMatches.length === 0 && (
-        <div className="max-w-5xl mx-auto text-center py-12">
-          <p className="text-[#444] text-sm">Tidak ada pertandingan</p>
-        </div>
-      )}
-
-      {/* Legend */}
-      <div className="max-w-5xl mx-auto mt-6">
-        <div className="border border-[#222] bg-[#0a0a0a] px-4 py-2 flex flex-wrap gap-6 text-xs">
-          <div className="flex items-center gap-2">
-            <PlayIcon size={14} className="text-[#f00] animate-pulse" />
-            <span className="text-[#444]">Live</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <ClockIcon size={14} className="text-[#ff0]" />
-            <span className="text-[#444]">Akan Berlangsung</span>
-          </div>
-          <div className="flex items-center gap-2">
-            <CheckIcon size={14} className="text-[#0f0]" />
-            <span className="text-[#444]">Selesai</span>
-          </div>
-          <div className="flex items-center gap-2 ml-auto">
-            <span className="text-[#333] text-xs">Click row or ▶ for details</span>
-          </div>
-        </div>
-      </div>
 
       {/* Footer */}
       <div className="max-w-5xl mx-auto mt-4 text-center">

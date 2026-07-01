@@ -6,6 +6,7 @@ import { fileURLToPath } from 'url';
 import matchesRouter from './routes/matches.js';
 import lineupsRouter from './routes/lineups.js';
 import syncRouter from './routes/sync.js';
+import analysisRouter from './routes/analysis.js';
 import { startSyncScheduler } from './jobs/syncScheduler.js';
 import { getDb, closeDb } from './db/database.js';
 
@@ -24,6 +25,7 @@ app.use(express.json());
 app.use('/api/matches', matchesRouter);
 app.use('/api/lineups', lineupsRouter);
 app.use('/api/sync', syncRouter);
+app.use('/api/analysis', analysisRouter);
 
 app.get('/api/status', (req, res) => {
   try {
