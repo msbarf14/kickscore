@@ -12,6 +12,8 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "sync": "curl -X POST http://localhost:3001/api/sync/matches",
+    "reset-db": "node server/scripts/reset-db.js",
+    "reset": "npm run reset-db && npm run sync",
     "status": "curl http://localhost:3001/api/status"
   },
   "dependencies": {
