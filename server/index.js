@@ -55,7 +55,7 @@ app.use((err, req, res, _next) => {
 
 const distPath = join(ROOT, 'dist');
 app.use(express.static(distPath));
-app.get('*', (req, res) => {
+app.get('/{*path}', (req, res) => {
   res.sendFile(join(distPath, 'index.html'));
 });
 
