@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { CloseIcon, LoadingIcon, PlayIcon, FlagIcon } from './Icons';
 
-const API_BASE = 'http://localhost:3001/api';
+const API_BASE = import.meta.env.VITE_API_BASE || '/api';
 
 export default function MatchDetailModal({ match, onClose }) {
   const [activeTab, setActiveTab] = useState('goals');

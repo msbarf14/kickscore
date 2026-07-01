@@ -13,7 +13,7 @@ export default function LineupModal({ fixtureId, homeTeam, awayTeam, onClose }) 
         setLoading(true);
         setError(null);
 
-        const res = await fetch(`http://localhost:3001/api/lineups/${fixtureId}`);
+        const res = await fetch(`/api/lineups/${fixtureId}`);
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
         const data = await res.json();
